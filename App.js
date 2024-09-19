@@ -10,11 +10,7 @@ import {
 import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
 import { Marker } from "react-native-maps";
 import Header from "./components/Header";
-import Button from "./components/Button";
 import NewSpotModal from "./components/NewSpotModal";
-
-// maps api key
-// AIzaSyAi163E7HUOsVYboerFSbJJ-aK6OyudZ6o
 
 const styles = StyleSheet.create({
   container: {
@@ -91,7 +87,7 @@ export default function App() {
         <Header />
 
         <NewSpotModal
-          text="New Spot"
+          buttonText="New Spot"
           location={{ latitude: region.latitude, longitude: region.longitude }}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}

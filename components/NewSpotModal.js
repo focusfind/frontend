@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Modal, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Modal,
+  Pressable,
+  TextInput,
+} from "react-native";
 
 export default function NewSpotModal(props) {
-  const { location, text } = props;
+  const { location, buttonText } = props;
+  const [text, onChangeText] = React.useState("Useless Text");
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.centeredView}>
@@ -18,6 +26,11 @@ export default function NewSpotModal(props) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Hello World!</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeText}
+              value={text}
+            />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
@@ -31,7 +44,7 @@ export default function NewSpotModal(props) {
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.textStyle}>{text}</Text>
+        <Text style={styles.textStyle}>{buttonText}</Text>
       </Pressable>
     </View>
   );
