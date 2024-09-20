@@ -8,12 +8,19 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { Region } from "react-native-maps";
 
-export default function NewSpotModal({ buttonText, location }) {
-  const [modalVisible, setModalVisible] = useState(false);
+export interface NewSpotModalProps {
+  buttonText: string;
+  location: Region;
+  modalVisible: boolean;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function NewSpotModal({ buttonText, location, modalVisible, setModalVisible }: NewSpotModalProps): JSX.Element {
   const [spotName, setSpotName] = useState("");
 
-  function onSave(spotName) {
+  function onSave(spotName: string) {
     Alert.alert(
       spotName,
       `Submitted!\nLatitude: ${location.latitude}\nLongitude: ${location.longitude}`,
