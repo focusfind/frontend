@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "expo": "~51.0.28",
+    "expo-dev-client": "^4.0.26",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.5",
@@ -17,7 +18,12 @@
     "react-native-maps": "^1.18.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@tsconfig/react-native": "^3.0.5",
+    "@types/jest": "^29.5.13",
+    "@types/react": "^18.3.8",
+    "@types/react-test-renderer": "^18.3.0",
+    "typescript": "^5.6.2"
   },
   "private": true
 }

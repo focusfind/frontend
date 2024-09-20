@@ -4,14 +4,14 @@ import { View, Text, StyleSheet } from "react-native";
 const Header = () => {
   return (
     <View style={styles.header}>
-      <Text style={styles.title}>Welcome to My App</Text>
+      <Text style={styles.title}>📍 FocusFind</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#6200ee",
+    backgroundColor: "black",
     padding: 10,
   },
   title: {

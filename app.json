@@ -23,6 +23,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "00a29125-7b8d-4567-9736-965e59771fad"
+      }
+    },
+    "owner": "arnavsurve"
   }
 }

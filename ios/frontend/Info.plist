@@ -43,8 +43,14 @@
       <true/>
     </dict>
 
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Location Permission</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Location Permission</string>
+    <key>NSLocationUsageDescription</key>
+    <string>GPS data is required to show your location on the map</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need access to your location to show your position on the map.<string>
+    <string>Location Permission</string>
 
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
