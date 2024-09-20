@@ -1,32 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, Alert, View, SafeAreaView, Button } from "react-native";
+import { StyleSheet, Text, Alert, View, SafeAreaView, Pressable, Button, TouchableOpacity } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import Header from "./components/Header";
 import NewSpotModal from "./components/NewSpotModal";
 import Geolocation from "react-native-geolocation-service";
-import { getEnforcing } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1,
-  },
-  hud: {
-    alignItems: "center",
-  },
-  button: {
-    position: "absolute",
-    justifyContent: "center",
-    bottom: 15,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-  },
-});
+import { styles } from "./styles/appStyles";
+import Map, { DefaultRegion } from "./components/Map"
 
 interface MarkerData {
   latlng: {
@@ -37,15 +16,8 @@ interface MarkerData {
   description: string;
 }
 
-const defaultRegion: Region = {
-  latitude: 37.78825,
-  longitude: -122.4324,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
-
 export default function App() {
-  const [region, setRegion] = useState<Region>(defaultRegion);
+  const [region, setRegion] = useState<Region>(DefaultRegion);
   const [markers, setMarkers] = useState<MarkerData[]>([
     {
       latlng: { latitude: 37.78825, longitude: -122.4324 },
@@ -58,6 +30,7 @@ export default function App() {
       description: "This is marker 2",
     },
   ]);
+
   const [modalVisible, setModalVisible] = useState(false);
   let watchId: number | null = null; // Store the watch position id
 
@@ -126,48 +99,49 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <MapView
-        style={styles.map}
-        region={region}
-        scrollEnabled={true}
-        showsUserLocation={true}
-        showsMyLocationButton={false}
-        onRegionChange={(newLocation) => setRegion(newLocation)}
-      >
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.latlng}
-            title={marker.title}
-            description={marker.description}
-          />
-        ))}
-      </MapView>
+      <View style={styles.content}>
+        <Header />
+        <Map
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={(newLocation) => setRegion(newLocation)}
+        >
+          {markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={marker.latlng}
+              title={marker.title}
+              description={marker.description}
+            />
+          ))}
+        </Map>
 
-      <Header />
+        <Text style={{ color: "white" }}>latitude: {region.latitude} </Text>
+        <Text style={{ color: "white" }}>longitude: {region.longitude} </Text>
 
-      <View style={{ backgroundColor: "white" }}>
-        <View style={{ marginTop: 10, padding: 10, borderRadius: 10, width: "40%" }}>
-          <Button title="Recenter" onPress={resetLocation} />
+
+        <NewSpotModal
+          location={{
+            latitude: region.latitude,
+            longitude: region.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.buttonOpen} onPress={resetLocation}>
+            <Text style={styles.buttonText}>Recenter</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.buttonOpen} onPress={() => setModalVisible(true)}>
+            <Text style={styles.buttonText}>New Spot</Text>
+          </TouchableOpacity>
         </View>
-        <Text>latitude: {region.latitude} </Text>
-        <Text>longitude: {region.longitude} </Text>
-        <View style={{ marginTop: 10, padding: 10, borderRadius: 10, width: "40%" }}>
-          <Button title="Send Location" />
-        </View>
+
       </View>
-
-      <NewSpotModal
-        buttonText="New Spot"
-        location={{
-          latitude: region.latitude,
-          longitude: region.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }

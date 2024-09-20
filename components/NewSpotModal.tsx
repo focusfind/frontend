@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   Modal,
   Pressable,
   TextInput,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { Region } from "react-native-maps";
 
 export interface NewSpotModalProps {
-  buttonText: string;
   location: Region;
   modalVisible: boolean;
+  style?: any,
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function NewSpotModal({ buttonText, location, modalVisible, setModalVisible }: NewSpotModalProps): JSX.Element {
+
+export default function NewSpotModal({ location, modalVisible, setModalVisible }: NewSpotModalProps): JSX.Element {
   const [spotName, setSpotName] = useState("");
 
   function onSave(spotName: string) {
@@ -71,12 +72,6 @@ export default function NewSpotModal({ buttonText, location, modalVisible, setMo
           </View>
         </View>
       </Modal>
-      <Pressable
-        style={styles.buttonOpen}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text style={styles.textStyle}>{buttonText}</Text>
-      </Pressable>
     </View>
   );
 }
