@@ -79,7 +79,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
         if (error instanceof Error) {
           console.log(error);
           if (error.message.includes("Duplicate entry for latitude/longitude") || error.message.includes("A spot already exists within 100 meters of this location")) {
-            Alert.alert("Error", "A spot already here! Contribute to a nearby spot instead?");
+            Alert.alert("Error", "A spot already exists here! Contribute to a nearby spot instead?");
           } else if (error.message.includes("Duplicate entry for name")) {
             Alert.alert("Error", "A spot with this name already exists!");
           } else {
@@ -128,7 +128,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
               maximumValue={100}
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="#000000"
-              onValueChange={(value) => setBusyIndex(Math.floor(value))}
+              onValueChange={(value) => setBusyIndex(value)}
               value={busyIndex}
             />
             <View style={styles.buttonContainer}>

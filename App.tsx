@@ -128,8 +128,10 @@ export default function App() {
 
         <NewSpotModal
           location={{
-            latitude: Geolocation.watchPosition((position) => position.coords.latitude),
-            longitude: Geolocation.watchPosition((position) => position.coords.longitude),
+            // latitude: Geolocation.watchPosition((position) => position.coords.latitude),
+            // longitude: Geolocation.watchPosition((position) => position.coords.longitude),
+            latitude: region.latitude,
+            longitude: region.longitude,
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
