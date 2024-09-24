@@ -7,27 +7,33 @@ import Geolocation from "react-native-geolocation-service";
 import { styles } from "./styles/appStyles";
 import Map, { DefaultRegion } from "./components/Map"
 
-interface MarkerData {
+export interface MarkerData {
+  name: string;
+  type: string;
   latlng: {
     latitude: number;
     longitude: number;
   };
-  title: string;
   description: string;
+  busyIndex: number;
 }
 
 export default function App() {
   const [region, setRegion] = useState<Region>(DefaultRegion);
   const [markers, setMarkers] = useState<MarkerData[]>([
     {
+      name: "Marker 1",
+      type: "coffee shop",
       latlng: { latitude: 37.78825, longitude: -122.4324 },
-      title: "Marker 1",
       description: "This is marker 1",
+      busyIndex: 75,
     },
     {
+      name: "Marker 2",
+      type: "library",
       latlng: { latitude: 37.789, longitude: -122.4334 },
-      title: "Marker 2",
       description: "This is marker 2",
+      busyIndex: 65,
     },
   ]);
 
@@ -44,8 +50,8 @@ export default function App() {
           setRegion({
             latitude,
             longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
           });
         },
         (error) => {
@@ -76,8 +82,8 @@ export default function App() {
           setRegion({
             latitude,
             longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
           });
         },
         (error) => {
@@ -110,7 +116,7 @@ export default function App() {
             <Marker
               key={index}
               coordinate={marker.latlng}
-              title={marker.title}
+              title={marker.name}
               description={marker.description}
             />
           ))}
@@ -122,8 +128,8 @@ export default function App() {
 
         <NewSpotModal
           location={{
-            latitude: region.latitude,
-            longitude: region.longitude,
+            latitude: Geolocation.watchPosition((position) => position.coords.latitude),
+            longitude: Geolocation.watchPosition((position) => position.coords.longitude),
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
