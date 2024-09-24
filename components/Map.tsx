@@ -9,12 +9,6 @@ export interface MapProps {
   children?: React.ReactNode;
 }
 
-export const DefaultRegion: Region = {
-  latitude: 37.78825,
-  longitude: -122.4324,
-  latitudeDelta: 0.01,
-  longitudeDelta: 0.01,
-};
 
 export default function Map({ style, region, onRegionChangeComplete, children }: MapProps) {
   return (

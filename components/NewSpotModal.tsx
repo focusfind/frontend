@@ -128,7 +128,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
               maximumValue={100}
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="#000000"
-              onValueChange={(value) => setBusyIndex(value)}
+              onValueChange={(value) => setBusyIndex(Math.floor(value))}
               value={busyIndex}
             />
             <View style={styles.buttonContainer}>

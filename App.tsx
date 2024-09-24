@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, Alert, View, SafeAreaView, Pressable, Button, TouchableOpacity } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import Header from "./components/Header";
 import NewSpotModal from "./components/NewSpotModal";
 import Geolocation from "react-native-geolocation-service";
 import { styles } from "./styles/appStyles";
-import Map, { DefaultRegion } from "./components/Map"
+import Map from "./components/Map"
 
 export interface MarkerData {
   name: string;
@@ -19,7 +19,21 @@ export interface MarkerData {
 }
 
 export default function App() {
-  const [region, setRegion] = useState<Region>(DefaultRegion);
+  const [region, setRegion] = useState<Region>({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
+
+  const [delta, setDelta] = useState({
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
+
+  const mapRef = useRef<MapView | null>(null);
+  const watchId = useRef<number | null>(null);
+
   const [markers, setMarkers] = useState<MarkerData[]>([
     {
       name: "Marker 1",
@@ -38,21 +52,26 @@ export default function App() {
   ]);
 
   const [modalVisible, setModalVisible] = useState(false);
-  let watchId: number | null = null; // Store the watch position id
 
   const resetLocation = async () => {
     const result = await Geolocation.requestAuthorization("whenInUse");
 
-    if (result) {
+    if (result === 'granted') {
       Geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          setRegion({
-            latitude,
-            longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          });
+          if (position && position.coords) {
+            const { latitude, longitude } = position.coords;
+            const newRegion = {
+              latitude,
+              longitude,
+              ...delta,
+            };
+            setRegion(newRegion);
+            mapRef.current?.animateToRegion(newRegion, 1000);
+          } else {
+            console.log("Invalid position object:", position);
+            Alert.alert("Error", "Failed to get valid location data.");
+          }
         },
         (error) => {
           console.log(error.code, error.message);
@@ -60,31 +79,36 @@ export default function App() {
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
+    } else {
+      Alert.alert("Permission denied", "Location permission is required.");
     }
   };
 
   useEffect(() => {
     const requestLocationPermission = async () => {
       const result = await Geolocation.requestAuthorization("whenInUse");
-      if (result) {
+      if (result === 'granted') {
         startLocationTracking();
+        resetLocation(); // Center view on current location
       } else {
         Alert.alert("Permission denied", "Location permission is required.");
       }
     };
 
-    resetLocation; // Center view on current location
-
     const startLocationTracking = () => {
-      watchId = Geolocation.watchPosition(
+      watchId.current = Geolocation.watchPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          setRegion({
-            latitude,
-            longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          });
+          if (position && position.coords) {
+            const { latitude, longitude } = position.coords;
+            setRegion(prevRegion => ({
+              latitude,
+              longitude,
+              latitudeDelta: prevRegion.latitudeDelta,
+              longitudeDelta: prevRegion.longitudeDelta,
+            }));
+          } else {
+            console.log("Invalid position object:", position);
+          }
         },
         (error) => {
           console.log(error.code, error.message);
@@ -97,11 +121,18 @@ export default function App() {
     requestLocationPermission();
 
     return () => {
-      if (watchId) {
-        Geolocation.clearWatch(watchId); // Clean up when the component unmounts
+      if (watchId.current) {
+        Geolocation.clearWatch(watchId.current); // Clean up when the component unmounts
       }
     };
   }, []);
+
+  const onRegionChangeComplete = (newRegion: Region) => {
+    setDelta({
+      latitudeDelta: newRegion.latitudeDelta,
+      longitudeDelta: newRegion.longitudeDelta,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -110,7 +141,7 @@ export default function App() {
         <Map
           style={styles.map}
           region={region}
-          onRegionChangeComplete={(newLocation) => setRegion(newLocation)}
+          onRegionChangeComplete={onRegionChangeComplete}
         >
           {markers.map((marker, index) => (
             <Marker
