@@ -19,31 +19,10 @@ export default function Map({ style, region, onRegionChangeComplete, children }:
   }, []);
 
   const fetchSpots = async () => {
-    try {
-      const response = await fetch(`${URL}/spots`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch spots");
-    }
+    const response = await fetch("${URL}/spots");
     const data = await response.json();
     setSpots(data);
-  } catch (error) {
-    console.error("Error fetching spots:", error);
-  }
   };
-
-  const handleMapPress = (event: any) => {
-    const { coordinate } = event.nativeEvent;
-    setSelectedSpot(coordinate);
-    if (onLocationSelect) {
-      onLocationSelect(coordinate);
-    }
-  };
-
-  const handleSpotPress = (spot: any) => {
-    setSelectedSpot(spot);
-  };
-
-  return (
 
   return (
     <MapView
