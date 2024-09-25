@@ -26,12 +26,6 @@ export default function App() {
     longitudeDelta: 0.01,
   });
 
-  const [delta, setDelta] = useState({
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  });
-
-  const mapRef = useRef<MapView | null>(null);
   const watchId = useRef<number | null>(null);
 
   const [markers, setMarkers] = useState<MarkerData[]>([
@@ -61,13 +55,13 @@ export default function App() {
         (position) => {
           if (position && position.coords) {
             const { latitude, longitude } = position.coords;
-            const newRegion = {
+            setRegion({
               latitude,
               longitude,
-              ...delta,
-            };
-            setRegion(newRegion);
-            mapRef.current?.animateToRegion(newRegion, 1000);
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
+            });
+            // mapRef.current?.animateToRegion(newRegion, 1000);
           } else {
             console.log("Invalid position object:", position);
             Alert.alert("Error", "Failed to get valid location data.");
@@ -128,7 +122,9 @@ export default function App() {
   }, []);
 
   const onRegionChangeComplete = (newRegion: Region) => {
-    setDelta({
+    setRegion({
+      latitude: newRegion.latitude,
+      longitude: newRegion.longitude,
       latitudeDelta: newRegion.latitudeDelta,
       longitudeDelta: newRegion.longitudeDelta,
     });
@@ -159,8 +155,6 @@ export default function App() {
 
         <NewSpotModal
           location={{
-            // latitude: Geolocation.watchPosition((position) => position.coords.latitude),
-            // longitude: Geolocation.watchPosition((position) => position.coords.longitude),
             latitude: region.latitude,
             longitude: region.longitude,
             latitudeDelta: 0.01,

@@ -53,6 +53,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
       };
 
       const jsonData = JSON.stringify(spotData);
+      console.log(jsonData);
 
       try {
         const response = await fetch(`${URL}/spots`, {
