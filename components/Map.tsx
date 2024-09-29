@@ -29,6 +29,7 @@ export default function Map({ style, region, onRegionChangeComplete, children }:
       style={style}
       /* mapType="hybrid" */
       region={region}
+      
       scrollEnabled={true}
       showsUserLocation={true}
       showsMyLocationButton={false}

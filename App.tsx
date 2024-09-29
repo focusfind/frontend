@@ -7,15 +7,15 @@ import Geolocation from "react-native-geolocation-service";
 import { styles } from "./styles/appStyles";
 import Map from "./components/Map"
 
-export interface MarkerData {
+export interface SpotData {
   name: string;
   type: string;
-  latlng: {
+  coordinates: {
     latitude: number;
     longitude: number;
   };
   description: string;
-  busyIndex: number;
+  busy_index: number;
 }
 
 export default function App() {
@@ -28,20 +28,20 @@ export default function App() {
 
   const watchId = useRef<number | null>(null);
 
-  const [markers, setMarkers] = useState<MarkerData[]>([
+  const [spots, setSpots] = useState<SpotData[]>([
     {
       name: "Marker 1",
       type: "coffee shop",
-      latlng: { latitude: 37.78825, longitude: -122.4324 },
+      coordinates: { latitude: 37.78825, longitude: -122.4324 },
       description: "This is marker 1",
-      busyIndex: 75,
+      busy_index: 75,
     },
     {
       name: "Marker 2",
       type: "library",
-      latlng: { latitude: 37.789, longitude: -122.4334 },
+      coordinates: { latitude: 37.789, longitude: -122.4334 },
       description: "This is marker 2",
-      busyIndex: 65,
+      busy_index: 65,
     },
   ]);
 
@@ -56,10 +56,10 @@ export default function App() {
           if (position && position.coords) {
             const { latitude, longitude } = position.coords;
             setRegion({
-              latitude,
-              longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1,
+              latitude: latitude,
+              longitude: longitude,
+              latitudeDelta: region.latitudeDelta,
+              longitudeDelta: region.longitudeDelta,
             });
             // mapRef.current?.animateToRegion(newRegion, 1000);
           } else {
@@ -139,12 +139,12 @@ export default function App() {
           region={region}
           onRegionChangeComplete={onRegionChangeComplete}
         >
-          {markers.map((marker, index) => (
+          {spots.map((spot, index) => (
             <Marker
               key={index}
-              coordinate={marker.latlng}
-              title={marker.name}
-              description={marker.description}
+              coordinate={spot.coordinates}
+              title={spot.name}
+              description={spot.description}
             />
           ))}
         </Map>
@@ -157,8 +157,8 @@ export default function App() {
           location={{
             latitude: region.latitude,
             longitude: region.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
+            latitudeDelta: region.latitudeDelta,
+            longitudeDelta: region.longitudeDelta,
           }}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}

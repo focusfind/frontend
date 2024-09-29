@@ -10,25 +10,13 @@ import {
 } from "react-native";
 import { Region } from "react-native-maps";
 import Slider from "@react-native-community/slider";
+import SpotData from "../App"
 
 export interface NewSpotModalProps {
   location: Region;
   modalVisible: boolean;
   style?: any;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface coordinates {
-  latitude: number;
-  longitude: number;
-}
-
-interface SpotData {
-  name: string;
-  type: string;
-  description: string;
-  coordinates: coordinates;
-  busy_index: number;
 }
 
 const URL = "http://localhost:42069";
@@ -41,7 +29,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
 
   const handleSubmit = async () => {
     if (spotName.trim()) {
-      const spotData: SpotData = {
+      const newSpot = {
         name: spotName,
         type: spotType,
         coordinates: {
@@ -52,7 +40,7 @@ export default function NewSpotModal({ location, modalVisible, setModalVisible }
         busy_index: busyIndex,
       };
 
-      const jsonData = JSON.stringify(spotData);
+      const jsonData = JSON.stringify(newSpot);
       console.log(jsonData);
 
       try {
